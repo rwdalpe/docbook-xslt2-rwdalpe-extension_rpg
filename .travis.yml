@@ -1,0 +1,18 @@
+language: java
+jdk:
+  - oraclejdk8
+install: true
+script: gradle dist
+deploy:
+  provider: releases
+  api_key:
+    secure: "u2Tns5an+yr4+XLSGHSBF9mn+DK1/JRhmJfLduAefmZn0bKunYV/+Vs23VAnUK2RTmxJ9zYKymJr2q4NllaXB2zSNQPj2s90hdbTntzbHkwbc7t16ckYO2U3y/jh5z31Dm9Hs6D2Xk4sq4CeopE3EmJZulqsPq8Vg0ps7BvuCf2n7yNBVdfpqLVCTtH8MIvngZUAj7WfLQIYZkw8A3cxk3Ds12oDr6zTAyJq/lcvjnBcDp1yvpI8sry8EeUZF8akR1+zwYu8Y/OXFXdY4kEmc6ikCCMRBCL3glD2bhOe9Pfmvoj0rHfHzKEN/cOlGDgFECOTqs02sxp199CJ2tenctjHV/NtlkF0MGA6afZKufp0if1FtEnkoC1+DwzDiDfoPUuR4XKkvmWJrSv+MJpG1HuvPYDHQhB1kSp9tixKRJPWrARXp7g8z8Tl59VfSh0SZFv7XPlrvkD08sHUjEGGSbjhylcUPI/6pOelebcXogM9fXFPEVBB+evUuYv8DovvpaxgIv2rII0CQ3p033IdqXVoft0yueJm7SQotBZ3lQfEhso0V45L+tuddw0kbBA/4bw9Yhav6KdcPLeDxm2yQrXz/PPFZva08LBpAtkYPNmOyQREu4wt4ImxEV86Kwk6ztEfIzTUBjtZNacj2tkhwG0hTSe2TRlaSG1forcKT2U="
+  skip_cleanup: true
+  file_glob: true
+  file:
+    - dist/*.zip
+  on:
+    tags: true
+notifications:
+  email:
+  - rwdalpe@gmail.com
