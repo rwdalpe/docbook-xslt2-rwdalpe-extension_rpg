@@ -1,5 +1,7 @@
 # Stylesheet extensions for [docbook-5.0-extension_rwdalpe-rpg][1]
 
+[![Build Status](https://travis-ci.org/rwdalpe/docbook-xslt2-rwdalpe-extension_rpg.svg?branch=master)](https://travis-ci.org/rwdalpe/docbook-xslt2-rwdalpe-extension_rpg)
+
 These are extensions to [https://github.com/rwdalpe/xslt20-stylesheets][2] to
 handle the new elements added by [docbook-5.0-extension_rwdalpe-rpg][1].
 
