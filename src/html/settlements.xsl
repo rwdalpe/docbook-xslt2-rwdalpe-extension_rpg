@@ -31,7 +31,7 @@
     </div>
   </xsl:template>
   
-  <xsl:template match="rpg:settlement/rpg:attributes">
+  <xsl:template match="rpg:settlement/rpg:abilityscores">
     <xsl:next-match>
       <xsl:with-param name="separator" select="'; '"/>
     </xsl:next-match>

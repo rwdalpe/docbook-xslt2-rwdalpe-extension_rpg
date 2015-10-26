@@ -31,20 +31,37 @@
 	<xsl:template match="rpg:creature">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
-			<xsl:apply-templates />
+			<div class="{local-name(.)}-header">
+				<xsl:apply-templates select="./rpg:creaturename|./rpg:challengerating" />
+			</div>
+			<xsl:apply-templates select="./rpg:challengerating/following-sibling::*" />
 		</div>
 	</xsl:template>
-	
-	  <xsl:template match="rpg:creature/rpg:challengerating">
-    <span class="{local-name(.)}-container">
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:text> </xsl:text>
-      <xsl:next-match/>
-    </span>
-  </xsl:template>
 
+	<xsl:template
+		match="rpg:creature/rpg:challengerating | rpg:creature/rpg:xpreward">
+		<span class="{local-name(.)}-container">
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:next-match />
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:creaturetypes">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:apply-templates select="./rpg:creaturetype" />
+			<xsl:if test="./rpg:creaturesubtype">
+				<xsl:text> (</xsl:text>
+				<xsl:apply-templates select="./rpg:creaturesubtype" />
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+		</span>
+	</xsl:template>
 </xsl:stylesheet>
