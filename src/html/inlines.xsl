@@ -21,15 +21,14 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:t="http://docbook.org/xslt/ns/template"
   
-  exclude-result-prefixes="xsl db f rpg h xs">
+  exclude-result-prefixes="xsl db f rpg h xs t">
 
   <xsl:template match="rpg:alignment|rpg:location|rpg:settlementtype
-                            |rpg:government|rpg:settlementquality|rpg:settlementdisadvantage">
-    <span>
-      <xsl:sequence select="f:html-attributes(.)"/>
-      <xsl:apply-templates/>
-    </span>
+                            |rpg:government|rpg:settlementquality|rpg:settlementdisadvantage
+                            |rpg:creaturename | rpg:challengerating">
+    <xsl:call-template name="t:inline-charseq"/>
   </xsl:template>
   
   <xsl:template match="rpg:settlementdanger">
@@ -44,7 +43,9 @@
         <xsl:if test="$prependSpace">
             <xsl:text> </xsl:text>
         </xsl:if>
-        <span class="{local-name(.)}-body"><xsl:apply-templates/></span>
+        <span class="{local-name(.)}-body">
+          <xsl:call-template name="t:inline-charseq"/>
+        </span>
       </xsl:if>
       <xsl:if test="$hasMod">
         <xsl:if test="$prependSpace or $hasBody">
@@ -76,12 +77,14 @@
         <xsl:if test="$hasCount">
             <xsl:text> </xsl:text>
         </xsl:if>
-        <span class="{local-name(.)}-body"><xsl:apply-templates/></span>
+        <span class="{local-name(.)}-body">
+            <xsl:call-template name="t:inline-charseq"/>
+        </span>
       </xsl:if>
     </span>
   </xsl:template>
   
-  <xsl:template match="rpg:attribute">
+  <xsl:template match="rpg:abilityscore">
     <xsl:param name="separator" as="xs:string" select="', '"/>
     
     <xsl:variable name="hasScore" select="@score"/>
@@ -89,7 +92,9 @@
     
     <span>
       <xsl:sequence select="f:html-attributes(.)"/>
-      <span class="{local-name(.)}-name"><xsl:apply-templates/></span>
+      <span class="{local-name(.)}-name">
+        <xsl:call-template name="t:inline-charseq"/>
+      </span>
       <xsl:if test="$hasScore">
         <xsl:text> </xsl:text>
         <span class="{local-name(.)}-score"><xsl:value-of select="@score"/></span>

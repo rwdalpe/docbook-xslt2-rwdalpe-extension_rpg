@@ -20,5 +20,6 @@
   <xsl:import href="inlines.xsl" />
   <xsl:import href="blocks.xsl"/>
   <xsl:import href="settlements.xsl" />
+  <xsl:import href="creatures.xsl" />
 
 </xsl:stylesheet>
