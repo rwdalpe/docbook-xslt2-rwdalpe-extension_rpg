@@ -26,7 +26,6 @@
   exclude-result-prefixes="xsl db f rpg h xs et">
 
   <xsl:template match="rpg:abilityscores">
-    
     <div>
       <xsl:sequence select="f:html-attributes(.)"/>
       <xsl:apply-templates/>

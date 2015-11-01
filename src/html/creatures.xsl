@@ -34,12 +34,74 @@
 			<div class="{local-name(.)}-header">
 				<xsl:apply-templates select="./rpg:creaturename|./rpg:challengerating" />
 			</div>
-			<xsl:apply-templates select="./rpg:challengerating/following-sibling::*" />
+			<xsl:apply-templates select="./rpg:xpreward" />
+			<div class="{local-name(.)}-raceClassLevels">
+				<xsl:for-each select="./rpg:race | ./rpg:class">
+					<xsl:apply-templates select="." />
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+			</div>
+			<div class="{local-name(.)}-alignmentSizeTypes">
+				<xsl:for-each select="./rpg:alignment | ./rpg:size | ./rpg:creaturetypes">
+					<xsl:apply-templates select="." />
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+			</div>
+			<div class="{local-name(.)}-initSenses">
+				<xsl:apply-templates select="./rpg:initiative" />
+				<xsl:text>; </xsl:text>
+				<xsl:apply-templates select="./rpg:senses" />
+			</div>
 		</div>
 	</xsl:template>
 
-	<xsl:template
-		match="rpg:creature/rpg:challengerating | rpg:creature/rpg:xpreward">
+	<xsl:template match="rpg:senses">
+		<span class="{local-name(.)}-container">
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="./rpg:sense" />
+			<xsl:if test="./rpg:skill">
+				<xsl:text>; </xsl:text>
+				<xsl:apply-templates select="./rpg:skill" />
+			</xsl:if>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:creature/rpg:challengerating">
+		<span class="{local-name(.)}-container">
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:next-match />
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:creature/rpg:xpreward">
+		<div class="{local-name(.)}-container">
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:next-match />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:creature/rpg:initiative">
 		<span class="{local-name(.)}-container">
 			<span class="{local-name(.)}-title">
 				<xsl:call-template name="gentext">
