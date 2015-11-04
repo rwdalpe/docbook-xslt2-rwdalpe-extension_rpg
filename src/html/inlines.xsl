@@ -37,6 +37,80 @@
 		<xsl:call-template name="t:inline-charseq" />
 	</xsl:template>
 
+	<xsl:template match="rpg:dc">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:call-template name="gentext">
+				<xsl:with-param
+					name="key"
+					select="local-name(.)" />
+			</xsl:call-template>
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="@rating" />
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:aura">
+		<xsl:param
+			name="separator"
+			as="xs:string"
+			select="', '" />
+
+		<xsl:variable
+			name="details"
+			select="@range | ./rpg:dc"
+			as="node()*" />
+
+		<xsl:variable
+			name="context"
+			select="." />
+
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-body">
+				<xsl:variable name="forXlink">
+					<xsl:for-each select="./node()[not(self::rpg:dc)]">
+						<xsl:choose>
+							<xsl:when test="self::text()">
+								<xsl:copy-of select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="t:inline-charseq" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:call-template name="t:xlink">
+					<xsl:with-param
+						name="content"
+						select="$forXlink" />
+				</xsl:call-template>
+			</span>
+			<xsl:if test="$details">
+				<xsl:text> (</xsl:text>
+				<xsl:for-each select="$details">
+					<xsl:if test="position() > 1">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					<span class="{local-name($context)}-{local-name(.)}">
+						<xsl:choose>
+							<xsl:when test="self::element()">
+								<xsl:apply-templates select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="." />
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
+				</xsl:for-each>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+		</span>
+		<xsl:if test="following-sibling::*[1][self::rpg:aura]">
+			<xsl:value-of select="$separator" />
+		</xsl:if>
+	</xsl:template>
+
 	<xsl:template match="rpg:skill">
 		<xsl:param
 			name="separator"

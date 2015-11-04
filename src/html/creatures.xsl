@@ -52,6 +52,17 @@
 				<xsl:text>; </xsl:text>
 				<xsl:apply-templates select="./rpg:senses" />
 			</div>
+			<div class="{local-name(.)}-auras">
+				<span class="aura-title">
+					<xsl:call-template name="gentext">
+						<xsl:with-param
+							name="key"
+							select="'aura'" />
+					</xsl:call-template>
+				</span>
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates select="./rpg:aura" />
+			</div>
 		</div>
 	</xsl:template>
 
