@@ -33,8 +33,129 @@
 		match="rpg:alignment|rpg:location|rpg:settlementtype
 														|rpg:government|rpg:settlementquality|rpg:settlementdisadvantage
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
-														| rpg:race | rpg:size | rpg:creaturetype">
+														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating">
 		<xsl:call-template name="t:inline-charseq" />
+	</xsl:template>
+
+	<xsl:template match="rpg:touch | rpg:flatfoot">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:call-template name="gentext">
+				<xsl:with-param
+					name="key"
+					select="local-name(.)" />
+			</xsl:call-template>
+			<xsl:text> </xsl:text>
+			<xsl:call-template name="t:inline-charseq" />
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:ac">
+		<xsl:variable
+			name="hasTouch"
+			select="./rpg:touch" />
+		<xsl:variable
+			name="hasFlatFoot"
+			select="./rpg:flatfoot" />
+
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:call-template name="gentext">
+				<xsl:with-param
+					name="key"
+					select="local-name(.)" />
+			</xsl:call-template>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="./rpg:rating" />
+			<xsl:if test="$hasTouch">
+				<xsl:text>, </xsl:text>
+				<xsl:apply-templates select="./rpg:touch" />
+			</xsl:if>
+			<xsl:if test="$hasFlatFoot">
+				<xsl:text>, </xsl:text>
+				<xsl:apply-templates select="./rpg:flatfoot" />
+			</xsl:if>
+
+			<xsl:variable
+				name="body"
+				select="./node()[not(self::rpg:modifier) and not(self::rpg:rating) and not(self::rpg:touch) and not(self::rpg:flatfoot)]" />
+
+			<xsl:if test="$body">
+				<span class="{local-name(.)}-body">
+					<xsl:variable name="forXlink">
+						<xsl:for-each select="$body">
+							<xsl:choose>
+								<xsl:when test="self::text()">
+									<xsl:copy-of select="." />
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:call-template name="t:inline-charseq" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:variable>
+					<xsl:call-template name="t:xlink">
+						<xsl:with-param
+							name="content"
+							select="$forXlink" />
+					</xsl:call-template>
+					<xsl:text> </xsl:text>
+				</span>
+			</xsl:if>
+
+			<xsl:if test="./rpg:modifier">
+				<xsl:text>(</xsl:text>
+				<xsl:apply-templates select="./rpg:modifier" />
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:modifier">
+		<xsl:param
+			name="separator"
+			as="xs:string"
+			select="', '" />
+
+		<xsl:variable
+			name="body"
+			select="./node()[not(self::rpg:qualifier)]" />
+
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:if test="$body">
+				<span class="{local-name(.)}-body">
+					<xsl:variable name="forXlink">
+						<xsl:for-each select="$body">
+							<xsl:choose>
+								<xsl:when test="self::text()">
+									<xsl:copy-of select="." />
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:call-template name="t:inline-charseq" />
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:variable>
+					<xsl:call-template name="t:xlink">
+						<xsl:with-param
+							name="content"
+							select="$forXlink" />
+					</xsl:call-template>
+					<xsl:text> </xsl:text>
+				</span>
+			</xsl:if>
+			<span class="{local-name(.)}-value">
+				<xsl:value-of select="@value" />
+			</span>
+			<xsl:if test="./rpg:qualifier">
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates select="./rpg:qualifier" />
+			</xsl:if>
+		</span>
+		<xsl:if test="following-sibling::*[1][self::rpg:modifier]">
+			<xsl:value-of select="$separator" />
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="rpg:dc">
@@ -153,7 +274,7 @@
 				<xsl:apply-templates select="./rpg:qualifier" />
 			</xsl:if>
 		</span>
-		<xsl:if test="following-sibling::*[1][self::rpg:sense]">
+		<xsl:if test="following-sibling::*[1][self::rpg:skill]">
 			<xsl:value-of select="$separator" />
 		</xsl:if>
 	</xsl:template>
@@ -354,9 +475,9 @@
 				<span class="{local-name(.)}-modifier">
 					<xsl:choose>
 						<xsl:when test="$hasScore">
-							(
+							<xsl:text>(</xsl:text>
 							<xsl:value-of select="@modifier" />
-							)
+							<xsl:text>)</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="@modifier" />

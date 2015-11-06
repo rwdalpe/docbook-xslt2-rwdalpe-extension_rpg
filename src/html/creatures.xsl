@@ -63,6 +63,27 @@
 				<xsl:text> </xsl:text>
 				<xsl:apply-templates select="./rpg:aura" />
 			</div>
+			<xsl:apply-templates select="./rpg:defenses" />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:defenses">
+		<div class="{local-name(.)}-container">
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:defenses/rpg:ac">
+		<div class="{local-name(.)}-container">
+			<xsl:next-match />
 		</div>
 	</xsl:template>
 
