@@ -37,16 +37,25 @@
 		<xsl:call-template name="t:inline-charseq" />
 	</xsl:template>
 
-	<xsl:template match="rpg:touch | rpg:flatfoot">
+	<xsl:template
+		match="rpg:touch | rpg:flatfoot | rpg:fasthealing | rpg:regeneration">
 		<span>
 			<xsl:sequence select="f:html-attributes(.)" />
-			<xsl:call-template name="gentext">
+
+			<xsl:variable name="forXlink">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates />
+			</xsl:variable>
+			<xsl:call-template name="t:xlink">
 				<xsl:with-param
-					name="key"
-					select="local-name(.)" />
+					name="content"
+					select="$forXlink" />
 			</xsl:call-template>
-			<xsl:text> </xsl:text>
-			<xsl:call-template name="t:inline-charseq" />
 		</span>
 	</xsl:template>
 
@@ -363,7 +372,8 @@
 			name="separator"
 			as="xs:string"
 			select="'/'" />
-		<span class="class-container">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
 			<xsl:call-template name="t:inline-charseq" />
 			<xsl:if test="@level">
 				<xsl:text> </xsl:text>

@@ -25,8 +25,9 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://www.w3.org/1999/xhtml"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:t="http://docbook.org/xslt/ns/template"
 
-	exclude-result-prefixes="xsl db f rpg h xs">
+	exclude-result-prefixes="xsl db f rpg h xs t">
 
 	<xsl:template match="rpg:creature">
 		<div>
@@ -36,9 +37,12 @@
 			</div>
 			<xsl:apply-templates select="./rpg:xpreward" />
 			<div class="{local-name(.)}-raceClassLevels">
-				<xsl:for-each select="./rpg:race | ./rpg:class">
+				<xsl:for-each select="./rpg:race">
 					<xsl:apply-templates select="." />
 					<xsl:text> </xsl:text>
+				</xsl:for-each>
+				<xsl:for-each select="./rpg:class">
+					<xsl:apply-templates select="." />
 				</xsl:for-each>
 			</div>
 			<div class="{local-name(.)}-alignmentSizeTypes">
@@ -64,6 +68,70 @@
 				<xsl:apply-templates select="./rpg:aura" />
 			</div>
 			<xsl:apply-templates select="./rpg:defenses" />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:hp">
+		<xsl:variable
+			name="body"
+			select="./node()[not(self::rpg:regeneration) and not(self::rpg:fasthealing)]" />
+
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:if test="$body">
+				<xsl:variable name="forXlink">
+					<xsl:for-each select="$body">
+						<xsl:choose>
+							<xsl:when test="self::text()">
+								<xsl:copy-of select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="t:inline-charseq" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:call-template name="t:xlink">
+					<xsl:with-param
+						name="content"
+						select="$forXlink" />
+				</xsl:call-template>
+			</xsl:if>
+			<xsl:if test="@hdtotal or @expanded">
+				<xsl:text>(</xsl:text>
+				<xsl:if test="@hdtotal">
+					<xsl:value-of select="@hdtotal" />
+					<xsl:text> </xsl:text>
+					<xsl:call-template name="gentext">
+						<xsl:with-param
+							name="key"
+							select="'hd'" />
+					</xsl:call-template>
+				</xsl:if>
+				<xsl:if test="@hdtotal and @expanded">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<xsl:if test="@expanded">
+					<xsl:value-of select="@expanded" />
+				</xsl:if>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+			<xsl:if test="./rpg:fasthealing | ./rpg:regeneration">
+				<xsl:text>; </xsl:text>
+				<xsl:for-each select="./rpg:fasthealing | ./rpg:regeneration">
+					<xsl:if test="position() != 1">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					<xsl:apply-templates select="." />
+				</xsl:for-each>
+			</xsl:if>
 		</div>
 	</xsl:template>
 
