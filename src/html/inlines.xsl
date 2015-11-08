@@ -33,8 +33,43 @@
 		match="rpg:alignment|rpg:location|rpg:settlementtype
 														|rpg:government|rpg:settlementquality|rpg:settlementdisadvantage
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
-														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating">
+														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval">
 		<xsl:call-template name="t:inline-charseq" />
+	</xsl:template>
+
+	<xsl:template match="rpg:save">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-body">
+				<xsl:variable name="forXlink">
+					<xsl:for-each select="./node()[not(self::rpg:qualifier)]">
+						<xsl:choose>
+							<xsl:when test="self::text()">
+								<xsl:copy-of select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="t:inline-charseq" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:call-template name="t:xlink">
+					<xsl:with-param
+						name="content"
+						select="$forXlink" />
+				</xsl:call-template>
+			</span>
+			<xsl:if test="@modifier">
+				<xsl:text> </xsl:text>
+				<span class="{local-name(.)}-modifier">
+					<xsl:value-of select="@modifier" />
+				</span>
+			</xsl:if>
+			<xsl:if test="./rpg:qualifier">
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates select="./rpg:qualifier" />
+			</xsl:if>
+		</span>
 	</xsl:template>
 
 	<xsl:template
@@ -59,6 +94,49 @@
 		</span>
 	</xsl:template>
 
+	<xsl:template match="rpg:hp">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:apply-templates select="./rpg:hpval" />
+			<xsl:text> </xsl:text>
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:if test="@hdtotal or @expanded">
+				<xsl:text> (</xsl:text>
+				<xsl:if test="@hdtotal">
+					<xsl:value-of select="@hdtotal" />
+					<xsl:text> </xsl:text>
+					<xsl:call-template name="gentext">
+						<xsl:with-param
+							name="key"
+							select="'hd'" />
+					</xsl:call-template>
+				</xsl:if>
+				<xsl:if test="@hdtotal and @expanded">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<xsl:if test="@expanded">
+					<xsl:value-of select="@expanded" />
+				</xsl:if>
+				<xsl:text>)</xsl:text>
+			</xsl:if>
+			<xsl:if test="./rpg:fasthealing | ./rpg:regeneration">
+				<xsl:text>; </xsl:text>
+				<xsl:for-each select="./rpg:fasthealing | ./rpg:regeneration">
+					<xsl:if test="position() != 1">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					<xsl:apply-templates select="." />
+				</xsl:for-each>
+			</xsl:if>
+		</span>
+	</xsl:template>
+
 	<xsl:template match="rpg:ac">
 		<xsl:variable
 			name="hasTouch"
@@ -69,11 +147,13 @@
 
 		<span>
 			<xsl:sequence select="f:html-attributes(.)" />
-			<xsl:call-template name="gentext">
-				<xsl:with-param
-					name="key"
-					select="local-name(.)" />
-			</xsl:call-template>
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
 			<xsl:text> </xsl:text>
 			<xsl:apply-templates select="./rpg:rating" />
 			<xsl:if test="$hasTouch">

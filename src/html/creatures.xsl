@@ -71,11 +71,21 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="rpg:hp">
-		<xsl:variable
-			name="body"
-			select="./node()[not(self::rpg:regeneration) and not(self::rpg:fasthealing)]" />
+	<xsl:template match="rpg:creaturesaves/rpg:save">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::*[self::rpg:save]">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
 
+	<xsl:template match="rpg:creaturesaves">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:apply-templates />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:creature/rpg:defenses/rpg:hp">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
 			<span class="{local-name(.)}-title">
@@ -85,27 +95,10 @@
 						select="local-name(.)" />
 				</xsl:call-template>
 			</span>
-			<xsl:if test="$body">
-				<xsl:variable name="forXlink">
-					<xsl:for-each select="$body">
-						<xsl:choose>
-							<xsl:when test="self::text()">
-								<xsl:copy-of select="." />
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:call-template name="t:inline-charseq" />
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:for-each>
-				</xsl:variable>
-				<xsl:call-template name="t:xlink">
-					<xsl:with-param
-						name="content"
-						select="$forXlink" />
-				</xsl:call-template>
-			</xsl:if>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="./rpg:hpval" />
 			<xsl:if test="@hdtotal or @expanded">
-				<xsl:text>(</xsl:text>
+				<xsl:text> (</xsl:text>
 				<xsl:if test="@hdtotal">
 					<xsl:value-of select="@hdtotal" />
 					<xsl:text> </xsl:text>
