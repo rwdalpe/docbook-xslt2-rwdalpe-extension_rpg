@@ -33,8 +33,91 @@
 		match="rpg:alignment|rpg:location|rpg:settlementtype
 														|rpg:government|rpg:settlementquality|rpg:settlementdisadvantage
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
-														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval">
+														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval
+														| rpg:defensiveability | rpg:immunity">
 		<xsl:call-template name="t:inline-charseq" />
+	</xsl:template>
+
+	<xsl:template match="rpg:sr">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<span class="{local-name(.)}-amount">
+				<xsl:value-of select="@amount" />
+			</span>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:resistance">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-amount">
+				<xsl:value-of select="@amount" />
+			</span>
+			<xsl:text> </xsl:text>
+			<span class="{local-name(.)}-body">
+				<xsl:variable name="forXlink">
+					<xsl:for-each select="./node()">
+						<xsl:choose>
+							<xsl:when test="self::text()">
+								<xsl:copy-of select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="t:inline-charseq" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:call-template name="t:xlink">
+					<xsl:with-param
+						name="content"
+						select="$forXlink" />
+				</xsl:call-template>
+			</span>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:dr">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-amount">
+				<xsl:value-of select="@amount" />
+			</span>
+			<span class="{local-name(.)}-body">
+				<xsl:text>/</xsl:text>
+				<xsl:choose>
+					<xsl:when test="./node()">
+						<xsl:variable name="forXlink">
+							<xsl:for-each select="./node()">
+								<xsl:choose>
+									<xsl:when test="self::text()">
+										<xsl:copy-of select="." />
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="t:inline-charseq" />
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</xsl:variable>
+						<xsl:call-template name="t:xlink">
+							<xsl:with-param
+								name="content"
+								select="$forXlink" />
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>&#8212;</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</span>
+		</span>
 	</xsl:template>
 
 	<xsl:template match="rpg:save">
@@ -72,8 +155,7 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template
-		match="rpg:touch | rpg:flatfoot | rpg:fasthealing | rpg:regeneration">
+	<xsl:template match="rpg:touch | rpg:flatfoot | rpg:fasthealing | rpg:regeneration">
 		<span>
 			<xsl:sequence select="f:html-attributes(.)" />
 

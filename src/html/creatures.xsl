@@ -71,6 +71,105 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="rpg:defensiveabilities/rpg:resistance">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::*[self::rpg:resistance]">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:defensiveabilities/rpg:immunity">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::*[self::rpg:immunity]">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:defensiveabilities/rpg:dr">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::*[self::rpg:dr]">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:defensiveabilities/rpg:defensiveability">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::*[self::rpg:defensiveability]">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:defensiveabilities">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-container">
+				<span class="{local-name(.)}-title">
+					<xsl:call-template name="gentext">
+						<xsl:with-param
+							name="key"
+							select="local-name(.)" />
+					</xsl:call-template>
+				</span>
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates select="./rpg:defensiveability" />
+			</span>
+			<xsl:if test="./rpg:dr">
+				<xsl:if test="./rpg:dr[1]/preceding-sibling::*">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<span class="dr-container">
+					<span class="dr-title">
+						<xsl:call-template name="gentext">
+							<xsl:with-param
+								name="key"
+								select="'dr'" />
+						</xsl:call-template>
+					</span>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="./rpg:dr" />
+				</span>
+			</xsl:if>
+			<xsl:if test="./rpg:immunity">
+				<xsl:if test="./rpg:immunity[1]/preceding-sibling::*">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<span class="immunities-container">
+					<span class="immunities-title">
+						<xsl:call-template name="gentext">
+							<xsl:with-param
+								name="key"
+								select="'immunity'" />
+						</xsl:call-template>
+					</span>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="./rpg:immunity" />
+				</span>
+			</xsl:if>
+			<xsl:if test="./rpg:resistance">
+				<xsl:if test="./rpg:resistance[1]/preceding-sibling::*">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<span class="resistance-container">
+					<span class="resistance-title">
+						<xsl:call-template name="gentext">
+							<xsl:with-param
+								name="key"
+								select="'resistance'" />
+						</xsl:call-template>
+					</span>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="./rpg:resistance" />
+				</span>
+			</xsl:if>
+			<xsl:if test="./rpg:sr">
+				<xsl:if test="./rpg:sr[1]/preceding-sibling::*">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<xsl:apply-templates select="./rpg:sr" />
+			</xsl:if>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="rpg:creaturesaves/rpg:save">
 		<xsl:next-match />
 		<xsl:if test="following-sibling::*[self::rpg:save]">
