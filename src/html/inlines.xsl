@@ -34,7 +34,7 @@
 														|rpg:government|rpg:settlementquality|rpg:settlementdisadvantage
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
 														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval
-														| rpg:defensiveability | rpg:immunity">
+														| rpg:defensiveability | rpg:immunity | rpg:weakness">
 		<xsl:call-template name="t:inline-charseq" />
 	</xsl:template>
 

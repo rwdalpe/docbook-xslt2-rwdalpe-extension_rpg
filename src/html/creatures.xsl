@@ -67,7 +67,7 @@
 				<xsl:text> </xsl:text>
 				<xsl:apply-templates select="./rpg:aura" />
 			</div>
-			<xsl:apply-templates select="./rpg:defenses" />
+			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses" />
 		</div>
 	</xsl:template>
 
@@ -227,8 +227,33 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="rpg:creature/rpg:defenses/rpg:weaknesses/rpg:weakness">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::rpg:weakness">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:creature/rpg:defenses/rpg:weaknesses">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<span class="{local-name(.)}-body">
+				<xsl:apply-templates />
+			</span>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="rpg:defenses">
-		<div class="{local-name(.)}-container">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
 			<span class="{local-name(.)}-title">
 				<xsl:call-template name="gentext">
 					<xsl:with-param
@@ -244,6 +269,21 @@
 	<xsl:template match="rpg:defenses/rpg:ac">
 		<div class="{local-name(.)}-container">
 			<xsl:next-match />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:offenses">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates />
 		</div>
 	</xsl:template>
 
