@@ -272,6 +272,43 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="rpg:offenses/rpg:meleeattacks | rpg:offenses/rpg:rangedattacks">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:offenses/rpg:creaturespeeds/rpg:speed">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::rpg:speed">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:offenses/rpg:creaturespeeds">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates />
+		</div>
+	</xsl:template>
+
 	<xsl:template match="rpg:offenses">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
