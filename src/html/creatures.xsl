@@ -309,6 +309,39 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template
+		match="rpg:creaturedimensions/rpg:space | rpg:creaturedimensions/rpg:reach">
+		<span class="{local-name(.)}-container">
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:next-match />
+			<xsl:if test="following-sibling::rpg:*">
+				<xsl:text>; </xsl:text>
+			</xsl:if>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:offenses/rpg:creaturedimensions">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-title">
+				<xsl:call-template name="gentext">
+					<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+				</xsl:call-template>
+			</span>
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates />
+		</div>
+	</xsl:template>
+
 	<xsl:template match="rpg:offenses">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />

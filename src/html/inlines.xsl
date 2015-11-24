@@ -34,7 +34,8 @@
 														|rpg:government|rpg:settlementquality|rpg:settlementdisadvantage
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
 														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval
-														| rpg:defensiveability | rpg:immunity | rpg:weakness | rpg:damage | rpg:hiteffect">
+														| rpg:defensiveability | rpg:immunity | rpg:weakness | rpg:damage | rpg:hiteffect
+														| rpg:attackname">
 		<xsl:call-template name="t:inline-charseq" />
 	</xsl:template>
 
@@ -52,6 +53,30 @@
 					select="$forXLink" />
 			</xsl:call-template>
 		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:space | rpg:reach">
+		<xsl:variable name="forXlink">
+			<xsl:for-each select="./node()[not(self::rpg:qualifier)]">
+				<xsl:choose>
+					<xsl:when test="self::text()">
+						<xsl:copy-of select="." />
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="t:inline-charseq" />
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:call-template name="t:xlink">
+			<xsl:with-param
+				name="content"
+				select="$forXlink" />
+		</xsl:call-template>
+		<xsl:if test="./rpg:qualifier">
+			<xsl:text> </xsl:text>
+			<xsl:apply-templates select="./rpg:qualifier" />
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="rpg:attackbonus">
