@@ -29,6 +29,24 @@
 
 	exclude-result-prefixes="xsl db f rpg h xs t">
 
+	<xsl:template match="rpg:abbrevcreaturedesc">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:apply-templates />
+		</div>
+	</xsl:template>
+
+	<xsl:template match="rpg:abbrevcreature">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<div class="{local-name(.)}-header">
+				<xsl:apply-templates select="./rpg:creaturename|./rpg:challengerating" />
+			</div>
+			<xsl:apply-templates select="./rpg:abbrevcreaturedesc" />
+			<xsl:apply-templates select="./rpg:hp" />
+		</div>
+	</xsl:template>
+
 	<xsl:template match="rpg:creature">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
@@ -184,7 +202,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="rpg:creature/rpg:defenses/rpg:hp">
+	<xsl:template match="rpg:creature/rpg:defenses/rpg:hp | rpg:abbrevcreature/rpg:hp">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
 			<span class="{local-name(.)}-title">
@@ -375,7 +393,7 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template match="rpg:creature/rpg:challengerating">
+	<xsl:template match="rpg:creature/rpg:challengerating | rpg:abbrevcreature/rpg:challengerating">
 		<span class="{local-name(.)}-container">
 			<span class="{local-name(.)}-title">
 				<xsl:call-template name="gentext">
