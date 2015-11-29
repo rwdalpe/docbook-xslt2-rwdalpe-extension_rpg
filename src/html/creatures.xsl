@@ -36,14 +36,38 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="rpg:abbrevcreaturedesc[@style = 'compact']">
+		<span class="{@style}">
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:apply-templates />
+		</span>
+	</xsl:template>
+
+
 	<xsl:template match="rpg:abbrevcreature">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
 			<div class="{local-name(.)}-header">
 				<xsl:apply-templates select="./rpg:creaturename|./rpg:challengerating" />
 			</div>
-			<xsl:apply-templates select="./rpg:abbrevcreaturedesc" />
-			<xsl:apply-templates select="./rpg:hp" />
+			<xsl:apply-templates
+				select="./rpg:abbrevcreaturedesc[not(@style) or @style != 'compact']" />
+
+			<xsl:variable
+				name="compactDesc"
+				select="./rpg:abbrevcreaturedesc[@style = 'compact']" />
+			<xsl:choose>
+				<xsl:when test="$compactDesc">
+					<div class="compactHPDesc-container">
+						<xsl:apply-templates select="./rpg:hp" />
+						<xsl:text> </xsl:text>
+						<xsl:apply-templates select="./rpg:abbrevcreaturedesc[@style = 'compact']" />
+					</div>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="./rpg:hp" />
+				</xsl:otherwise>
+			</xsl:choose>
 		</div>
 	</xsl:template>
 
@@ -393,7 +417,8 @@
 		</span>
 	</xsl:template>
 
-	<xsl:template match="rpg:creature/rpg:challengerating | rpg:abbrevcreature/rpg:challengerating">
+	<xsl:template
+		match="rpg:creature/rpg:challengerating | rpg:abbrevcreature/rpg:challengerating">
 		<span class="{local-name(.)}-container">
 			<span class="{local-name(.)}-title">
 				<xsl:call-template name="gentext">
