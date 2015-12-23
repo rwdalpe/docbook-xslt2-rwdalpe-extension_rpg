@@ -98,17 +98,19 @@
 				<xsl:text>; </xsl:text>
 				<xsl:apply-templates select="./rpg:senses" />
 			</div>
-			<div class="{local-name(.)}-auras">
-				<span class="aura-title">
-					<xsl:call-template name="gentext">
-						<xsl:with-param
-							name="key"
-							select="'aura'" />
-					</xsl:call-template>
-				</span>
-				<xsl:text> </xsl:text>
-				<xsl:apply-templates select="./rpg:aura" />
-			</div>
+			<xsl:if test="./rpg:aura">
+				<div class="{local-name(.)}-auras">
+					<span class="aura-title">
+						<xsl:call-template name="gentext">
+							<xsl:with-param
+								name="key"
+								select="'aura'" />
+						</xsl:call-template>
+					</span>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="./rpg:aura" />
+				</div>
+			</xsl:if>
 			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses" />
 		</div>
 	</xsl:template>
@@ -409,9 +411,13 @@
 				</xsl:call-template>
 			</span>
 			<xsl:text> </xsl:text>
-			<xsl:apply-templates select="./rpg:sense" />
+			<xsl:if test="./rpg:sense">
+				<xsl:apply-templates select="./rpg:sense" />
+			</xsl:if>
 			<xsl:if test="./rpg:skill">
-				<xsl:text>; </xsl:text>
+				<xsl:if test="./rpg:skill[count(preceding-sibling::*) > 0]">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
 				<xsl:apply-templates select="./rpg:skill" />
 			</xsl:if>
 		</span>
