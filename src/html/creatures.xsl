@@ -100,19 +100,21 @@
 				<xsl:text>; </xsl:text>
 				<xsl:apply-templates select="./rpg:senses" />
 			</div>
-			<div class="{local-name(.)}-auras">
-				<span class="aura-title">
-					<xsl:call-template name="gentext">
-						<xsl:with-param
-							name="key"
-							select="'aura'" />
-					</xsl:call-template>
-				</span>
-				<xsl:text> </xsl:text>
-				<xsl:apply-templates select="./rpg:aura">
-					<xsl:with-param name="separator" select="', '"/>
-				</xsl:apply-templates>
-			</div>
+			<xsl:if test="./rpg:aura">
+				<div class="{local-name(.)}-auras">
+					<span class="aura-title">
+						<xsl:call-template name="gentext">
+							<xsl:with-param
+								name="key"
+								select="'aura'" />
+						</xsl:call-template>
+					</span>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="./rpg:aura">
+						<xsl:with-param name="separator" select="', '"/>
+					</xsl:apply-templates>
+				</div>
+			</xsl:if>
 			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses" />
 		</div>
 	</xsl:template>
