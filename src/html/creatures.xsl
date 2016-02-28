@@ -261,7 +261,8 @@
 	| rpg:creature/rpg:defenses/rpg:weaknesses
 	| rpg:offenses/rpg:meleeattacks | rpg:offenses/rpg:rangedattacks
 	| rpg:offenses/rpg:creaturespeeds
-	| rpg:offenses/rpg:creaturedimensions">
+	| rpg:offenses/rpg:creaturedimensions
+	| rpg:offenses/rpg:specialattacks">
 		<xsl:call-template name="container-div">
 			<xsl:with-param name="key" select="local-name(.)"/>
 			<xsl:with-param name="contents">
@@ -273,6 +274,13 @@
 	<xsl:template match="rpg:offenses/rpg:creaturespeeds/rpg:speed">
 		<xsl:next-match />
 		<xsl:if test="following-sibling::rpg:speed">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:offenses/rpg:specialattacks/rpg:specialattack">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::rpg:specialattack">
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
