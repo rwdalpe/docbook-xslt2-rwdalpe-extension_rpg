@@ -64,4 +64,20 @@
         </div>
     </xsl:template>
 
+    <xsl:template name="named-container-div">
+        <xsl:param name="name" required="yes"/>
+        <xsl:param name="contents" as="node()*" select="()"/>
+
+        <div>
+            <xsl:sequence select="f:html-attributes(.)"/>
+            <span class="{translate($name, ' ','')}-title">
+                <xsl:value-of select="$name"/>
+            </span>
+            <xsl:text> </xsl:text>
+            <span class="{translate($name, ' ','')}-body">
+                <xsl:copy-of select="$contents"/>
+            </span>
+        </div>
+    </xsl:template>
+
 </xsl:stylesheet>

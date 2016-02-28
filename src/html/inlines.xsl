@@ -35,7 +35,7 @@
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
 														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval
 														| rpg:defensiveability | rpg:immunity | rpg:weakness | rpg:damage | rpg:hiteffect
-														| rpg:attackname">
+														| rpg:attackname | rpg:sla | rpg:spell">
 		<xsl:call-template name="t:inline-charseq" />
 	</xsl:template>
 
@@ -508,6 +508,20 @@
 		</span>
 	</xsl:template>
 
+	<xsl:template match="rpg:casterlevel">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:call-template name="gentext">
+				<xsl:with-param
+						name="key"
+						select="local-name(.)" />
+			</xsl:call-template>
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="@level" />
+		</span>
+	</xsl:template>
+
+
 	<xsl:template match="rpg:aura">
 		<xsl:param
 			name="separator"
@@ -598,6 +612,58 @@
 					<xsl:with-param
 						name="content"
 						select="$forXlink" />
+				</xsl:call-template>
+			</span>
+			<xsl:if test="$hasModifier">
+				<xsl:text> </xsl:text>
+				<span class="{local-name(.)}-modifier">
+					<xsl:value-of select="@modifier" />
+				</span>
+			</xsl:if>
+			<xsl:if test="./rpg:qualifier">
+				<xsl:text> </xsl:text>
+				<xsl:apply-templates select="./rpg:qualifier" />
+			</xsl:if>
+		</span>
+		<xsl:if test="following-sibling::*[1][self::rpg:skill]">
+			<xsl:value-of select="$separator" />
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:concentration">
+		<xsl:param
+				name="separator"
+				as="xs:string"
+				select="''" />
+
+		<xsl:variable
+				name="hasModifier"
+				select="@modifier" />
+
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-body">
+				<xsl:variable name="forXlink">
+					<xsl:call-template name="gentext">
+						<xsl:with-param
+								name="key"
+								select="local-name(.)" />
+					</xsl:call-template>
+					<xsl:for-each select="./node()[not(self::rpg:qualifier)]">
+						<xsl:choose>
+							<xsl:when test="self::text()">
+								<xsl:copy-of select="." />
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:call-template name="t:inline-charseq" />
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</xsl:variable>
+				<xsl:call-template name="t:xlink">
+					<xsl:with-param
+							name="content"
+							select="$forXlink" />
 				</xsl:call-template>
 			</span>
 			<xsl:if test="$hasModifier">

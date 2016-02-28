@@ -350,4 +350,72 @@
 			</xsl:if>
 		</span>
 	</xsl:template>
+
+	<xsl:template match="rpg:offenses/rpg:slas | rpg:offenses/rpg:spellsprepped">
+		<xsl:variable name="titleOverride">
+			<xsl:choose>
+				<xsl:when test="@title"><xsl:value-of select="@title"/></xsl:when>
+				<xsl:otherwise/>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="contents">
+			<span class="{local-name(.)}-clConcentration">
+				<xsl:text>(</xsl:text>
+				<xsl:variable name="clAndCon" select="./rpg:casterlevel and ./rpg:concentration"/>
+				<xsl:apply-templates select="./rpg:casterlevel"/>
+				<xsl:if test="$clAndCon">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
+				<xsl:apply-templates select="./rpg:concentration"/>
+				<xsl:text>)</xsl:text>
+			</span>
+			<ul class="{local-name(.)}">
+				<xsl:apply-templates select="./rpg:slatier | ./rpg:spelltier"/>
+			</ul>
+		</xsl:variable>
+
+		<xsl:choose>
+			<xsl:when test="$titleOverride != ''">
+				<xsl:call-template name="named-container-div">
+					<xsl:with-param name="name" select="$titleOverride"/>
+					<xsl:with-param name="contents" select="$contents"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="container-div">
+					<xsl:with-param name="key" select="local-name(.)"/>
+					<xsl:with-param name="contents" select="$contents"/>
+				</xsl:call-template>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="rpg:offenses/rpg:slas/rpg:slatier | rpg:offenses/rpg:spellsprepped/rpg:spelltier">
+		<li>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-frequency">
+				<xsl:value-of select="@frequency | @tiername"/>
+			</span>
+			<xsl:text> &#x2014; </xsl:text>
+			<span class="{local-name(.)}-body">
+				<xsl:apply-templates/>
+			</span>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="rpg:slatier/rpg:sla">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::rpg:sla">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+    <xsl:template match="rpg:spelltier/rpg:spell">
+        <xsl:next-match />
+        <xsl:if test="following-sibling::rpg:spell">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+    </xsl:template>
+
 </xsl:stylesheet>
