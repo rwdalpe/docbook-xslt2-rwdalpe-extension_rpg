@@ -37,45 +37,38 @@
     </xsl:next-match>
   </xsl:template>
   
-  <xsl:template match="rpg:settlementqualities">
-    <div>
-      <xsl:sequence select="f:html-attributes(.)"/>
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:apply-templates/>
-    </div>
+  <xsl:template match="rpg:settlementqualities
+  | rpg:demographics">
+      <xsl:call-template name="container-div">
+          <xsl:with-param name="key" select="local-name(.)"/>
+          <xsl:with-param name="contents">
+              <xsl:apply-templates />
+          </xsl:with-param>
+      </xsl:call-template>
   </xsl:template>
   
   <xsl:template match="rpg:settlementdisadvantages">
-    <span>
-      <xsl:sequence select="f:html-attributes(.)"/>
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:apply-templates/>
-    </span>
+      <xsl:call-template name="container-span">
+          <xsl:with-param name="key" select="local-name(.)"/>
+          <xsl:with-param name="contents">
+              <xsl:apply-templates />
+          </xsl:with-param>
+      </xsl:call-template>
   </xsl:template>
 
-  <xsl:template match="rpg:settlement/rpg:settlementdanger">
-    <span class="{local-name(.)}-container">
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
+    <xsl:template match="rpg:settlement/rpg:settlementdanger">
+        <xsl:call-template name="container-span">
             <xsl:with-param name="key" select="local-name(.)"/>
+            <xsl:with-param name="contents">
+                <xsl:next-match>
+                    <xsl:with-param name="prependSpace" select="true()"/>
+                </xsl:next-match>
+            </xsl:with-param>
         </xsl:call-template>
-      </span>
-      <xsl:next-match>
-        <xsl:with-param name="prependSpace" select="true()"/>
-      </xsl:next-match>
-    </span>
-    <xsl:if test="following-sibling::rpg:settlementdisadvantages">
-        <xsl:text>; </xsl:text>
-    </xsl:if>
-  </xsl:template>
+        <xsl:if test="following-sibling::rpg:settlementdisadvantages">
+            <xsl:text>; </xsl:text>
+        </xsl:if>
+    </xsl:template>
   
   <xsl:template match="rpg:settlementquality|rpg:settlementdisadvantage">
     <xsl:param name="separator" as="xs:string" select="', '"/>
@@ -85,63 +78,45 @@
       <xsl:value-of select="$separator"/>
     </xsl:if>
   </xsl:template>
-  
-  <xsl:template match="rpg:demographics">
-    <div>
-      <xsl:sequence select="f:html-attributes(.)"/>
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:apply-templates/>
-    </div>
-  </xsl:template>
-  
+
   <xsl:template match="rpg:demographics/rpg:government">
-    <span class="{local-name(.)}-container">
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:text> </xsl:text>
-      <xsl:next-match/>
-    </span>
+      <xsl:call-template name="container-span">
+          <xsl:with-param name="key" select="local-name(.)"/>
+          <xsl:with-param name="contents">
+              <xsl:next-match/>
+          </xsl:with-param>
+      </xsl:call-template>
   </xsl:template>
   
   <xsl:template match="rpg:demographics/rpg:populations">
     <xsl:variable name="makeTotal" select="@total or (count(./rpg:population) > 1 and count(./rpg:population[not(@count)]) = 0)"/>
-    
-    <div>
-      <xsl:sequence select="f:html-attributes(.)"/>
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:choose>
-        <xsl:when test="$makeTotal">
-          <xsl:variable name="total">
-            <xsl:choose>
-              <xsl:when test="@total">
-                   <xsl:value-of select="@total"/>
-              </xsl:when>
-              <xsl:otherwise>
-                  <xsl:value-of select="sum(./rpg:population/@count)"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable>
-          
-          <xsl:text> </xsl:text>
-          <span class="{local-name(.)}-total"><xsl:value-of select="$total"/></span>
-          <xsl:text> (</xsl:text><xsl:apply-templates/><xsl:text>)</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:apply-templates/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </div>
+
+      <xsl:call-template name="container-div">
+          <xsl:with-param name="key" select="local-name(.)"/>
+          <xsl:with-param name="contents">
+              <xsl:choose>
+                  <xsl:when test="$makeTotal">
+                      <xsl:variable name="total">
+                          <xsl:choose>
+                              <xsl:when test="@total">
+                                  <xsl:value-of select="@total"/>
+                              </xsl:when>
+                              <xsl:otherwise>
+                                  <xsl:value-of select="sum(./rpg:population/@count)"/>
+                              </xsl:otherwise>
+                          </xsl:choose>
+                      </xsl:variable>
+
+                      <xsl:text> </xsl:text>
+                      <span class="{local-name(.)}-total"><xsl:value-of select="$total"/></span>
+                      <xsl:text> (</xsl:text><xsl:apply-templates/><xsl:text>)</xsl:text>
+                  </xsl:when>
+                  <xsl:otherwise>
+                      <xsl:apply-templates/>
+                  </xsl:otherwise>
+              </xsl:choose>
+          </xsl:with-param>
+      </xsl:call-template>
   </xsl:template>
   
   <xsl:template match="rpg:populations/rpg:population">
@@ -159,42 +134,39 @@
     <xsl:variable name="lineBreakers" as="xs:string+" select="($attrs[3])"/>
     <xsl:variable name="localName" select="local-name(.)"/>
     <xsl:variable name="node" select="."/>
-  
-    <div>
-      <xsl:sequence select="f:html-attributes(.)"/>
-      <span class="{local-name(.)}-title">
-        <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="local-name(.)"/>
-        </xsl:call-template>
-      </span>
-      <xsl:for-each select="$attrs">
-        <xsl:variable name="name" select="."/>
-        <span class="{$name}-container">
-            <span class="{$name}-title">
-                <xsl:call-template name="gentext">
-                    <xsl:with-param name="lang" select="f:l10n-language($node)"/>
-                    <xsl:with-param name="key" select="concat(concat($localName,'-'),$name)"/>
-                </xsl:call-template>
-            </span>
-            <xsl:text> </xsl:text>
-            <span class="{$name}-value">
-                <xsl:choose>
-                    <xsl:when test="$node/@*[starts-with(name(),$name)]">
-                        <xsl:value-of select="$node/@*[starts-with(name(),$name)]"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:text>&#x2014;</xsl:text>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </span>
-            <xsl:if test="empty(index-of($lineBreakers, $name)) and position() != last()">
-                <xsl:text>; </xsl:text>
-            </xsl:if>
-            <xsl:if test="not(empty(index-of($lineBreakers, $name)))">
-                <br/>
-            </xsl:if>
-        </span>
-      </xsl:for-each>
-    </div>
+
+      <xsl:call-template name="container-div">
+          <xsl:with-param name="key" select="local-name(.)"/>
+          <xsl:with-param name="contents">
+              <xsl:for-each select="$attrs">
+                <xsl:variable name="name" select="."/>
+                <span class="{$name}-container">
+                    <span class="{$name}-title">
+                        <xsl:call-template name="gentext">
+                            <xsl:with-param name="lang" select="f:l10n-language($node)"/>
+                            <xsl:with-param name="key" select="concat(concat($localName,'-'),$name)"/>
+                        </xsl:call-template>
+                    </span>
+                    <xsl:text> </xsl:text>
+                    <span class="{$name}-body">
+                        <xsl:choose>
+                            <xsl:when test="$node/@*[starts-with(name(),$name)]">
+                                <xsl:value-of select="$node/@*[starts-with(name(),$name)]"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>&#x2014;</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </span>
+                    <xsl:if test="empty(index-of($lineBreakers, $name)) and position() != last()">
+                        <xsl:text>; </xsl:text>
+                    </xsl:if>
+                    <xsl:if test="not(empty(index-of($lineBreakers, $name)))">
+                        <br/>
+                    </xsl:if>
+                </span>
+              </xsl:for-each>
+          </xsl:with-param>
+      </xsl:call-template>
   </xsl:template>
 </xsl:stylesheet>

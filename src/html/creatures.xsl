@@ -150,64 +150,44 @@
 	<xsl:template match="rpg:defensiveabilities">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-container">
-				<span class="{local-name(.)}-title">
-					<xsl:call-template name="gentext">
-						<xsl:with-param
-							name="key"
-							select="local-name(.)" />
-					</xsl:call-template>
-				</span>
-				<xsl:text> </xsl:text>
-				<xsl:apply-templates select="./rpg:defensiveability" />
-			</span>
+			<xsl:call-template name="container-span">
+				<xsl:with-param name="key" select="local-name(.)"/>
+				<xsl:with-param name="contents">
+					<xsl:apply-templates select="./rpg:defensiveability" />
+				</xsl:with-param>
+			</xsl:call-template>
 			<xsl:if test="./rpg:dr">
 				<xsl:if test="./rpg:dr[1]/preceding-sibling::*">
 					<xsl:text>; </xsl:text>
 				</xsl:if>
-				<span class="dr-container">
-					<span class="dr-title">
-						<xsl:call-template name="gentext">
-							<xsl:with-param
-								name="key"
-								select="'dr'" />
-						</xsl:call-template>
-					</span>
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="./rpg:dr" />
-				</span>
+                <xsl:call-template name="container-span">
+                    <xsl:with-param name="key" select="'dr'"/>
+                    <xsl:with-param name="contents">
+                        <xsl:apply-templates select="./rpg:dr" />
+                    </xsl:with-param>
+                </xsl:call-template>
 			</xsl:if>
 			<xsl:if test="./rpg:immunity">
 				<xsl:if test="./rpg:immunity[1]/preceding-sibling::*">
 					<xsl:text>; </xsl:text>
 				</xsl:if>
-				<span class="immunities-container">
-					<span class="immunities-title">
-						<xsl:call-template name="gentext">
-							<xsl:with-param
-								name="key"
-								select="'immunity'" />
-						</xsl:call-template>
-					</span>
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="./rpg:immunity" />
-				</span>
+                <xsl:call-template name="container-span">
+                    <xsl:with-param name="key" select="'immunity'"/>
+                    <xsl:with-param name="contents">
+                        <xsl:apply-templates select="./rpg:immunity" />
+                    </xsl:with-param>
+                </xsl:call-template>
 			</xsl:if>
 			<xsl:if test="./rpg:resistance">
 				<xsl:if test="./rpg:resistance[1]/preceding-sibling::*">
 					<xsl:text>; </xsl:text>
 				</xsl:if>
-				<span class="resistance-container">
-					<span class="resistance-title">
-						<xsl:call-template name="gentext">
-							<xsl:with-param
-								name="key"
-								select="'resistance'" />
-						</xsl:call-template>
-					</span>
-					<xsl:text> </xsl:text>
-					<xsl:apply-templates select="./rpg:resistance" />
-				</span>
+                <xsl:call-template name="container-span">
+                    <xsl:with-param name="key" select="'resistance'"/>
+                    <xsl:with-param name="contents">
+                        <xsl:apply-templates select="./rpg:resistance" />
+                    </xsl:with-param>
+                </xsl:call-template>
 			</xsl:if>
 			<xsl:if test="./rpg:sr">
 				<xsl:if test="./rpg:sr[1]/preceding-sibling::*">
@@ -233,46 +213,40 @@
 	</xsl:template>
 
 	<xsl:template match="rpg:creature/rpg:defenses/rpg:hp | rpg:abbrevcreature/rpg:hp">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates select="./rpg:hpval" />
-			<xsl:if test="@hdtotal or @expanded">
-				<xsl:text> (</xsl:text>
-				<xsl:if test="@hdtotal">
-					<xsl:value-of select="@hdtotal" />
-					<xsl:text> </xsl:text>
-					<xsl:call-template name="gentext">
-						<xsl:with-param
-							name="key"
-							select="'hd'" />
-					</xsl:call-template>
-				</xsl:if>
-				<xsl:if test="@hdtotal and @expanded">
-					<xsl:text>; </xsl:text>
-				</xsl:if>
-				<xsl:if test="@expanded">
-					<xsl:value-of select="@expanded" />
-				</xsl:if>
-				<xsl:text>)</xsl:text>
-			</xsl:if>
-			<xsl:if test="./rpg:fasthealing | ./rpg:regeneration">
-				<xsl:text>; </xsl:text>
-				<xsl:for-each select="./rpg:fasthealing | ./rpg:regeneration">
-					<xsl:if test="position() != 1">
-						<xsl:text>, </xsl:text>
+		<xsl:call-template name="container-div">
+			<xsl:with-param name="key" select="local-name(.)"/>
+			<xsl:with-param name="contents">
+				<xsl:apply-templates select="./rpg:hpval" />
+				<xsl:if test="@hdtotal or @expanded">
+					<xsl:text> (</xsl:text>
+					<xsl:if test="@hdtotal">
+						<xsl:value-of select="@hdtotal" />
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="gentext">
+							<xsl:with-param
+									name="key"
+									select="'hd'" />
+						</xsl:call-template>
 					</xsl:if>
-					<xsl:apply-templates select="." />
-				</xsl:for-each>
-			</xsl:if>
-		</div>
+					<xsl:if test="@hdtotal and @expanded">
+						<xsl:text>; </xsl:text>
+					</xsl:if>
+					<xsl:if test="@expanded">
+						<xsl:value-of select="@expanded" />
+					</xsl:if>
+					<xsl:text>)</xsl:text>
+				</xsl:if>
+				<xsl:if test="./rpg:fasthealing | ./rpg:regeneration">
+					<xsl:text>; </xsl:text>
+					<xsl:for-each select="./rpg:fasthealing | ./rpg:regeneration">
+						<xsl:if test="position() != 1">
+							<xsl:text>, </xsl:text>
+						</xsl:if>
+						<xsl:apply-templates select="." />
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="rpg:creature/rpg:defenses/rpg:weaknesses/rpg:weakness">
@@ -282,57 +256,18 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="rpg:creature/rpg:defenses/rpg:weaknesses">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<span class="{local-name(.)}-body">
+	<xsl:template match="rpg:defenses
+	| rpg:offenses
+	| rpg:creature/rpg:defenses/rpg:weaknesses
+	| rpg:offenses/rpg:meleeattacks | rpg:offenses/rpg:rangedattacks
+	| rpg:offenses/rpg:creaturespeeds
+	| rpg:offenses/rpg:creaturedimensions">
+		<xsl:call-template name="container-div">
+			<xsl:with-param name="key" select="local-name(.)"/>
+			<xsl:with-param name="contents">
 				<xsl:apply-templates />
-			</span>
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:defenses">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates />
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:defenses/rpg:ac">
-		<div class="{local-name(.)}-container">
-			<xsl:next-match />
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:offenses/rpg:meleeattacks | rpg:offenses/rpg:rangedattacks">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates />
-		</div>
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="rpg:offenses/rpg:creaturespeeds/rpg:speed">
@@ -342,134 +277,56 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="rpg:offenses/rpg:creaturespeeds">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates />
-		</div>
-	</xsl:template>
-
-	<xsl:template
-		match="rpg:creaturedimensions/rpg:space | rpg:creaturedimensions/rpg:reach">
-		<span class="{local-name(.)}-container">
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:next-match />
-			<xsl:if test="following-sibling::rpg:*">
-				<xsl:text>; </xsl:text>
-			</xsl:if>
-		</span>
-	</xsl:template>
-
-	<xsl:template match="rpg:offenses/rpg:creaturedimensions">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates />
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:offenses">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates />
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:senses">
-		<span class="{local-name(.)}-container">
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:apply-templates select="./rpg:sense">
-				<xsl:with-param name="separator" select="', '"/>
-			</xsl:apply-templates>
-			<xsl:if test="./rpg:skill">
-				<xsl:if test="count(./rpg:sense) > 0">
+	<xsl:template match="rpg:creaturedimensions/rpg:space | rpg:creaturedimensions/rpg:reach">
+		<xsl:call-template name="container-span">
+			<xsl:with-param name="key" select="local-name(.)"/>
+			<xsl:with-param name="contents">
+				<xsl:next-match />
+				<xsl:if test="following-sibling::rpg:*">
 					<xsl:text>; </xsl:text>
 				</xsl:if>
-				<xsl:apply-templates select="./rpg:skill">
-					<xsl:with-param name="separator" select="', '"/>
-				</xsl:apply-templates>
-			</xsl:if>
-		</span>
+			</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
+
+
+	<xsl:template match="rpg:senses">
+		<xsl:call-template name="container-span">
+            <xsl:with-param name="key" select="local-name(.)"/>
+            <xsl:with-param name="contents">
+                <xsl:apply-templates select="./rpg:sense">
+                    <xsl:with-param name="separator" select="', '"/>
+                </xsl:apply-templates>
+                <xsl:if test="./rpg:skill">
+                    <xsl:if test="count(./rpg:sense) > 0">
+                        <xsl:text>; </xsl:text>
+                    </xsl:if>
+                    <xsl:apply-templates select="./rpg:skill">
+                        <xsl:with-param name="separator" select="', '"/>
+                    </xsl:apply-templates>
+                </xsl:if>
+            </xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template
-		match="rpg:creature/rpg:challengerating | rpg:abbrevcreature/rpg:challengerating">
-		<span class="{local-name(.)}-container">
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:next-match />
-		</span>
+		match="rpg:creature/rpg:challengerating | rpg:abbrevcreature/rpg:challengerating
+		| rpg:creature/rpg:initiative">
+		<xsl:call-template name="container-span">
+			<xsl:with-param name="key" select="local-name(.)"/>
+			<xsl:with-param name="contents">
+				<xsl:next-match />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="rpg:creature/rpg:xpreward">
-		<div class="{local-name(.)}-container">
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:next-match />
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:creature/rpg:initiative">
-		<span class="{local-name(.)}-container">
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<xsl:next-match />
-		</span>
+		<xsl:call-template name="container-div">
+			<xsl:with-param name="key" select="local-name(.)"/>
+			<xsl:with-param name="contents">
+				<xsl:next-match />
+			</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="rpg:creaturetypes">
