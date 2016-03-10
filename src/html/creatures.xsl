@@ -115,7 +115,7 @@
 					</xsl:apply-templates>
 				</div>
 			</xsl:if>
-			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses" />
+			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses | ./rpg:statistics" />
 		</div>
 	</xsl:template>
 
@@ -262,7 +262,8 @@
 	| rpg:offenses/rpg:meleeattacks | rpg:offenses/rpg:rangedattacks
 	| rpg:offenses/rpg:creaturespeeds
 	| rpg:offenses/rpg:creaturedimensions
-	| rpg:offenses/rpg:specialattacks">
+	| rpg:offenses/rpg:specialattacks
+	| rpg:statistics">
 		<xsl:call-template name="container-div">
 			<xsl:with-param name="key" select="local-name(.)"/>
 			<xsl:with-param name="contents">
@@ -417,5 +418,11 @@
             <xsl:text>, </xsl:text>
         </xsl:if>
     </xsl:template>
+
+	<xsl:template match="rpg:statistics/rpg:abilityscores">
+		<xsl:next-match>
+			<xsl:with-param name="separator" select="', '"/>
+		</xsl:next-match>
+	</xsl:template>
 
 </xsl:stylesheet>
