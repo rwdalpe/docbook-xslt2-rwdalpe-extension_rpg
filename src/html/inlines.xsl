@@ -106,6 +106,29 @@
 		</span>
 	</xsl:template>
 
+	<xsl:template match="rpg:bab | rpg:cmb | rpg:cmd">
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<span class="{local-name(.)}-modifier">
+				<xsl:variable
+						name="mod"
+						select="@modifier" />
+				<xsl:call-template name="t:xlink">
+					<xsl:with-param
+							name="content"
+							select="string($mod)" />
+				</xsl:call-template>
+			</span>
+			<xsl:for-each select="./rpg:modifierbreakdown | ./rpg:qualifier">
+				<xsl:if test=".">
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="." />
+				</xsl:if>
+			</xsl:for-each>
+		</span>
+	</xsl:template>
+
+
 	<xsl:template match="rpg:attackbonus">
 		<span>
 			<xsl:sequence select="f:html-attributes(.)" />
@@ -413,7 +436,7 @@
 
 			<xsl:variable
 				name="body"
-				select="./node()[not(self::rpg:modifier) and not(self::rpg:rating) and not(self::rpg:touch) and not(self::rpg:flatfoot)]" />
+				select="./node()[not(self::rpg:modifierbreakdown) and not(self::rpg:rating) and not(self::rpg:touch) and not(self::rpg:flatfoot)]" />
 
 			<xsl:if test="$body">
 				<span class="{local-name(.)}-body">
@@ -438,13 +461,27 @@
 				</span>
 			</xsl:if>
 
-			<xsl:if test="./rpg:modifier">
-				<xsl:text>(</xsl:text>
-				<xsl:apply-templates select="./rpg:modifier">
+			<xsl:if test="./rpg:modifierbreakdown">
+				<xsl:apply-templates select="./rpg:modifierbreakdown">
 					<xsl:with-param name="separator" select="', '"/>
 				</xsl:apply-templates>
-				<xsl:text>)</xsl:text>
 			</xsl:if>
+		</span>
+	</xsl:template>
+
+	<xsl:template match="rpg:modifierbreakdown">
+		<xsl:param
+			name="separator"
+			as="xs:string"
+			select="''" />
+
+		<span>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:text>(</xsl:text>
+			<xsl:apply-templates select="./rpg:modifier">
+				<xsl:with-param name="separator" select="$separator"/>
+			</xsl:apply-templates>
+			<xsl:text>)</xsl:text>
 		</span>
 	</xsl:template>
 

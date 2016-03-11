@@ -320,7 +320,8 @@
 
 	<xsl:template
 		match="rpg:creature/rpg:challengerating | rpg:abbrevcreature/rpg:challengerating
-		| rpg:creature/rpg:initiative">
+		| rpg:creature/rpg:initiative
+		| rpg:attackstatistics/rpg:bab | rpg:attackstatistics/rpg:cmb | rpg:attackstatistics/rpg:cmd">
 		<xsl:call-template name="container-span">
 			<xsl:with-param name="key" select="local-name(.)"/>
 			<xsl:with-param name="contents">
@@ -425,4 +426,14 @@
 		</xsl:next-match>
 	</xsl:template>
 
+	<xsl:template match="rpg:statistics/rpg:attackstatistics">
+		<div>
+			<xsl:sequence select="f:html-attributes(.)" />
+			<xsl:apply-templates select="./rpg:bab"/>
+			<xsl:for-each select="./rpg:cmb | rpg:cmd">
+				<xsl:text>; </xsl:text>
+				<xsl:apply-templates select="."/>
+			</xsl:for-each>
+		</div>
+	</xsl:template>
 </xsl:stylesheet>
