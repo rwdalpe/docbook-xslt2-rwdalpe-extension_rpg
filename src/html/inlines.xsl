@@ -35,7 +35,7 @@
 														|rpg:creaturename | rpg:challengerating | rpg:xpreward
 														| rpg:race | rpg:size | rpg:creaturetype | rpg:rating | rpg:hpval
 														| rpg:defensiveability | rpg:immunity | rpg:weakness | rpg:damage | rpg:hiteffect
-														| rpg:attackname | rpg:sla | rpg:spell">
+														| rpg:attackname | rpg:sla | rpg:spell | rpg:feat">
 		<xsl:call-template name="t:inline-charseq" />
 	</xsl:template>
 
