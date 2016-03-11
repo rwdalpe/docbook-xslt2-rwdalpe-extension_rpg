@@ -634,7 +634,7 @@
 			<xsl:sequence select="f:html-attributes(.)" />
 			<span class="{local-name(.)}-body">
 				<xsl:variable name="forXlink">
-					<xsl:for-each select="./node()[not(self::rpg:qualifier)]">
+					<xsl:for-each select="./node()[not(self::rpg:qualifier) and not(self::rpg:modifierbreakdown)]">
 						<xsl:choose>
 							<xsl:when test="self::text()">
 								<xsl:copy-of select="." />
@@ -657,10 +657,12 @@
 					<xsl:value-of select="@modifier" />
 				</span>
 			</xsl:if>
-			<xsl:if test="./rpg:qualifier">
-				<xsl:text> </xsl:text>
-				<xsl:apply-templates select="./rpg:qualifier" />
-			</xsl:if>
+			<xsl:for-each select="./rpg:modifierbreakdown | ./rpg:qualifier">
+				<xsl:if test=".">
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="." />
+				</xsl:if>
+			</xsl:for-each>
 		</span>
 		<xsl:if test="following-sibling::*[1][self::rpg:skill]">
 			<xsl:value-of select="$separator" />

@@ -264,7 +264,7 @@
 	| rpg:offenses/rpg:creaturedimensions
 	| rpg:offenses/rpg:specialattacks
 	| rpg:statistics
-	| rpg:statistics/rpg:creaturefeats">
+	| rpg:statistics/rpg:creaturefeats | rpg:statistics/rpg:creatureskills">
 		<xsl:call-template name="container-div">
 			<xsl:with-param name="key" select="local-name(.)"/>
 			<xsl:with-param name="contents">
@@ -441,6 +441,13 @@
 	<xsl:template match="rpg:creaturefeats/rpg:feat">
 		<xsl:next-match />
 		<xsl:if test="following-sibling::rpg:feat">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="rpg:creatureskills/rpg:skill">
+		<xsl:next-match />
+		<xsl:if test="following-sibling::rpg:skill">
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
