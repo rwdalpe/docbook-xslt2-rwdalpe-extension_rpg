@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-  Copyright (C) 2014 Robert Winslow Dalpe
+  Copyright (C) 2016 Robert Winslow Dalpe
   
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
   xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:et="http://docbook.org/ns/docbook/extensions/rpg/private"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  
+
   exclude-result-prefixes="xsl db f rpg h xs et">
 
   <xsl:template match="rpg:abilityscores">
