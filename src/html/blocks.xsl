@@ -22,6 +22,7 @@
   xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:et="http://docbook.org/ns/docbook/extensions/rpg/private"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:t="http://docbook.org/xslt/ns/template"
 
   exclude-result-prefixes="xsl db f rpg h xs et">
 
@@ -32,6 +33,14 @@
       <xsl:apply-templates>
         <xsl:with-param name="separator" select="$separator"/>
       </xsl:apply-templates>
+    </div>
+  </xsl:template>
+
+  <xsl:template match="rpg:statblocksection">
+    <div>
+      <xsl:sequence select="f:html-attributes(.)"/>
+      <xsl:call-template name="t:titlepage"/>
+      <xsl:apply-templates />
     </div>
   </xsl:template>
 </xsl:stylesheet>

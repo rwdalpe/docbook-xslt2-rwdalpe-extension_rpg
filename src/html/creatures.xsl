@@ -28,45 +28,13 @@
 
 	exclude-result-prefixes="xsl db f rpg h xs t">
 
-	<xsl:template match="rpg:abbrevcreaturedesc">
-		<div>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<xsl:apply-templates />
-		</div>
-	</xsl:template>
-
-	<xsl:template match="rpg:abbrevcreaturedesc[@style = 'compact']">
-		<span class="{@style}">
-			<xsl:sequence select="f:html-attributes(.)" />
-			<xsl:apply-templates />
-		</span>
-	</xsl:template>
-
-
 	<xsl:template match="rpg:abbrevcreature">
 		<div>
 			<xsl:sequence select="f:html-attributes(.)" />
 			<div class="{local-name(.)}-header">
 				<xsl:apply-templates select="./rpg:creaturename|./rpg:challengerating" />
 			</div>
-			<xsl:apply-templates
-				select="./rpg:abbrevcreaturedesc[not(@style) or @style != 'compact']" />
-
-			<xsl:variable
-				name="compactDesc"
-				select="./rpg:abbrevcreaturedesc[@style = 'compact']" />
-			<xsl:choose>
-				<xsl:when test="$compactDesc">
-					<div class="compactHPDesc-container">
-						<xsl:apply-templates select="./rpg:hp" />
-						<xsl:text> </xsl:text>
-						<xsl:apply-templates select="./rpg:abbrevcreaturedesc[@style = 'compact']" />
-					</div>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="./rpg:hp" />
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:apply-templates select="./*[not(self::rpg:creaturename or self::rpg:challengerating)]"/>
 		</div>
 	</xsl:template>
 
@@ -114,7 +82,7 @@
 					</xsl:apply-templates>
 				</div>
 			</xsl:if>
-			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses | ./rpg:statistics" />
+			<xsl:apply-templates select="./rpg:defenses | ./rpg:offenses | ./rpg:statistics | ./rpg:statblocksection" />
 		</div>
 	</xsl:template>
 
@@ -211,7 +179,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="rpg:creature/rpg:defenses/rpg:hp | rpg:abbrevcreature/rpg:hp">
+	<xsl:template match="rpg:creature/rpg:defenses/rpg:hp | rpg:abbrevcreature/rpg:statblocksection/rpg:hp">
 		<xsl:call-template name="container-div">
 			<xsl:with-param name="key" select="local-name(.)"/>
 			<xsl:with-param name="contents">
@@ -330,7 +298,7 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<xsl:template match="rpg:creature/rpg:xpreward">
+	<xsl:template match="rpg:creature/rpg:xpreward | rpg:abbrevcreature/rpg:xpreward">
 		<xsl:call-template name="container-div">
 			<xsl:with-param name="key" select="local-name(.)"/>
 			<xsl:with-param name="contents">
