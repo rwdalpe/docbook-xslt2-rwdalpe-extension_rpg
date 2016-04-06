@@ -23,6 +23,7 @@
                 xmlns:h="http://www.w3.org/1999/xhtml"
                 xmlns:et="http://docbook.org/ns/docbook/extensions/rpg/private"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:t="http://docbook.org/xslt/ns/template"
 
                 exclude-result-prefixes="xsl db f rpg h xs et">
 
@@ -79,6 +80,29 @@
                 <xsl:copy-of select="$contents"/>
             </span>
         </div>
+    </xsl:template>
+
+    <xsl:template name="trpg:everything-xlink-content">
+        <xsl:for-each select="./node()">
+            <xsl:call-template name="trpg:text-or-inline"/>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template name="trpg:no-qualifier-xlink-content">
+        <xsl:for-each select="./node()[not(self::rpg:qualifier)]">
+            <xsl:call-template name="trpg:text-or-inline"/>
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template name="trpg:text-or-inline">
+        <xsl:choose>
+            <xsl:when test="self::text()">
+                <xsl:copy-of select="." />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="t:inline-charseq" />
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>
