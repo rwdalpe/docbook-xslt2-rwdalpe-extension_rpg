@@ -21,6 +21,7 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:trpg="http://rwdalpe.github.io/docbook/xslt/rpg/extension"
   
   exclude-result-prefixes="xsl db f rpg h xs">
 
@@ -39,7 +40,7 @@
   
   <xsl:template match="rpg:settlementqualities
   | rpg:demographics">
-      <xsl:call-template name="container-div">
+      <xsl:call-template name="trpg:gentext-container-div">
           <xsl:with-param name="key" select="local-name(.)"/>
           <xsl:with-param name="contents">
               <xsl:apply-templates />
@@ -48,7 +49,7 @@
   </xsl:template>
   
   <xsl:template match="rpg:settlementdisadvantages">
-      <xsl:call-template name="container-span">
+      <xsl:call-template name="trpg:gentext-container-span">
           <xsl:with-param name="key" select="local-name(.)"/>
           <xsl:with-param name="contents">
               <xsl:apply-templates />
@@ -57,7 +58,7 @@
   </xsl:template>
 
     <xsl:template match="rpg:settlement/rpg:settlementdanger">
-        <xsl:call-template name="container-span">
+        <xsl:call-template name="trpg:gentext-container-span">
             <xsl:with-param name="key" select="local-name(.)"/>
             <xsl:with-param name="contents">
                 <xsl:next-match>
@@ -80,7 +81,7 @@
   </xsl:template>
 
   <xsl:template match="rpg:demographics/rpg:government">
-      <xsl:call-template name="container-span">
+      <xsl:call-template name="trpg:gentext-container-span">
           <xsl:with-param name="key" select="local-name(.)"/>
           <xsl:with-param name="contents">
               <xsl:next-match/>
@@ -91,7 +92,7 @@
   <xsl:template match="rpg:demographics/rpg:populations">
     <xsl:variable name="makeTotal" select="@total or (count(./rpg:population) > 1 and count(./rpg:population[not(@count)]) = 0)"/>
 
-      <xsl:call-template name="container-div">
+      <xsl:call-template name="trpg:gentext-container-div">
           <xsl:with-param name="key" select="local-name(.)"/>
           <xsl:with-param name="contents">
               <xsl:choose>
@@ -135,7 +136,7 @@
     <xsl:variable name="localName" select="local-name(.)"/>
     <xsl:variable name="node" select="."/>
 
-      <xsl:call-template name="container-div">
+      <xsl:call-template name="trpg:gentext-container-div">
           <xsl:with-param name="key" select="local-name(.)"/>
           <xsl:with-param name="contents">
               <xsl:for-each select="$attrs">

@@ -25,6 +25,7 @@
 	xmlns:h="http://www.w3.org/1999/xhtml"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:t="http://docbook.org/xslt/ns/template"
+	xmlns:trpg="http://rwdalpe.github.io/docbook/xslt/rpg/extension"
 
 	exclude-result-prefixes="xsl db f rpg h xs t">
 
@@ -225,20 +226,10 @@
 	</xsl:template>
 
 	<xsl:template match="rpg:sr">
-		<span>
-			<xsl:sequence select="f:html-attributes(.)" />
-			<span class="{local-name(.)}-title">
-				<xsl:call-template name="gentext">
-					<xsl:with-param
-						name="key"
-						select="local-name(.)" />
-				</xsl:call-template>
-			</span>
-			<xsl:text> </xsl:text>
-			<span class="{local-name(.)}-amount">
-				<xsl:value-of select="@amount" />
-			</span>
-		</span>
+		<xsl:call-template name="trpg:gentext-container-span">
+			<xsl:with-param name="key" select="local-name(.)"/>
+			<xsl:with-param name="contents" select="@amount"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="rpg:resistance">

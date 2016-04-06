@@ -18,6 +18,7 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:db="http://docbook.org/ns/docbook" xmlns:f="http://docbook.org/xslt/ns/extension"
                 xmlns:rpg="http://docbook.org/ns/docbook"
+                xmlns:trpg="http://rwdalpe.github.io/docbook/xslt/rpg/extension"
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://www.w3.org/1999/xhtml"
                 xmlns:et="http://docbook.org/ns/docbook/extensions/rpg/private"
@@ -25,7 +26,7 @@
 
                 exclude-result-prefixes="xsl db f rpg h xs et">
 
-    <xsl:template name="container-span">
+    <xsl:template name="trpg:gentext-container-span">
         <xsl:param name="key" required="yes"/>
         <xsl:param name="contents" as="node()*" select="()"/>
 
@@ -44,7 +45,7 @@
         </span>
     </xsl:template>
 
-    <xsl:template name="container-div">
+    <xsl:template name="trpg:gentext-container-div">
         <xsl:param name="key" required="yes"/>
         <xsl:param name="contents" as="node()*" select="()"/>
 
@@ -64,7 +65,7 @@
         </div>
     </xsl:template>
 
-    <xsl:template name="named-container-div">
+    <xsl:template name="trpg:named-container-div">
         <xsl:param name="name" required="yes"/>
         <xsl:param name="contents" as="node()*" select="()"/>
 
